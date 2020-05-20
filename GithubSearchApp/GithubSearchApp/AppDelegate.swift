@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Gedatsu.open()
     #endif
     window = UIWindow(frame: UIScreen.main.bounds)
-    window?.rootViewController = ViewController()
+    window?.rootViewController = MainViewController()
     window?.makeKeyAndVisible()
     return true
   }

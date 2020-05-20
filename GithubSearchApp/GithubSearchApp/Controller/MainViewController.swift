@@ -12,7 +12,7 @@ import RxCocoa
 import RxViewController
 import SafariServices
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
   
   private lazy var searchBar = UISearchBar().then {
     $0.barStyle = .default
@@ -23,8 +23,7 @@ class ViewController: UIViewController {
     $0.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
   }
   let disposeBag = DisposeBag()
-  
-  var shownRepoAndURLs: [(String, String)] = [] {
+  var shownRepoAndURLs: [Repository] = [] {
     didSet {
       self.tableView.reloadData()
     }
@@ -79,7 +78,7 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
           self.shownRepoAndURLs =
             zip(data.items.map{$0.name}, data.items.map{ $0.htmlURL })
-              .map{ ($0, $1) }
+              .map{ Repository(repoName: $0, repoURL: $1) }
         }
       case .failure(let error):
         print(error.localizedDescription)
@@ -88,22 +87,22 @@ class ViewController: UIViewController {
   }
 }
 
-extension ViewController: UITableViewDataSource {
+extension MainViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     shownRepoAndURLs.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-    cell.textLabel?.text = shownRepoAndURLs[indexPath.row].0
+    cell.textLabel?.text = shownRepoAndURLs[indexPath.row].repoName
     print(shownRepoAndURLs[indexPath.row])
     return cell
   }
 }
 
-extension ViewController: UITableViewDelegate {
+extension MainViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let url = URL(string: shownRepoAndURLs[indexPath.row].1) else { return }
+    guard let url = URL(string: shownRepoAndURLs[indexPath.row].repoURL) else { return }
     let safariViewController = SFSafariViewController(url: url)
     present(safariViewController, animated: true)
   }

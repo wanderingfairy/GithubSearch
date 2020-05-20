@@ -16,7 +16,6 @@ final class APIManager {
   let baseURL = "https://api.github.com/"
   let searchURL = "search/repositories"
   
-  
   //Get
   func getRepository(keyword: String, completion: @escaping (Result<GitHubRepository, Error>) -> Void) {
     let decoder = JSONDecoder()
@@ -25,6 +24,7 @@ final class APIManager {
     let param: Parameters = [
       "q" : keyword
     ]
+    
     AF.request(baseURL + searchURL, method: .get, parameters: param)
       .responseDecodable(of: GitHubRepository.self, queue: .global(), decoder: decoder) { (response) in
         switch response.result {

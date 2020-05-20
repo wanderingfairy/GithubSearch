@@ -16,7 +16,6 @@ import Foundation
 //MARK: RepositoryStruct
 struct Repository {
   let repoName: String
-  let repoOwnerName: String
   let repoURL: String
 }
 
